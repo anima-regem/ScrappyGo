@@ -11,11 +11,16 @@ var links = make(map[string]bool)
 var linksArray = make([]string, 0)
 
 func pushLink(link string){
+  fmt.Println("Pushed ", link)
+  if containsLink(link){
+    return
+  }
   linksArray = append(linksArray, link)
   links[link] = true
 }
 
 func popLink() string {
+  fmt.Println("Popped ", linksArray[len(linksArray)-1])
   length := len(linksArray)
   if length == 0 {
     return ""
@@ -33,11 +38,10 @@ func containsLink(link string) bool {
 
 func BFS(c *colly.Collector, root string){
   c.Visit(root)
-  if len(linksArray) > 0 {
+  for len(linksArray) > 0 {
     link := popLink()
-    if !containsLink(link){
-      BFS(c, link)
-    }
+    fmt.Println(link)
+    BFS(c, link)
   }
 }
 
@@ -46,17 +50,17 @@ func main(){
 
   c.OnHTML("a[href]", func(e *colly.HTMLElement){
     link := e.Attr("href")
-    url, _ := url.Parse(link)
-    link = url.Host
-    if link == "" {
-      return
-    }
-    if containsLink(link){
-      return
-    }
-    fmt.Println(link)
+    		parsedURL, err := url.Parse(link)
+		if err != nil || parsedURL.Host == "" {
+			return
+		}
+
+		link = e.Request.AbsoluteURL(link)
+
+    parsedURL, _ = url.Parse(link)
+    link = parsedURL.Host
     pushLink(link)
-    fmt.Println(linksArray)
+
   })
 
   c.OnRequest(func(r *colly.Request){

@@ -1,4 +1,4 @@
-module github.com/anima-regem/scrappyGo
+module github.com/anima-regem/Web-Crawler-3000
 
 go 1.23.2
 

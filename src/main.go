@@ -51,6 +51,9 @@ func main() {
       enqueueLink(link)
     }
   })
-
-  BFS(c, "https://blog.animaregem.me")
+  
+  var rootLink string
+  fmt.Print("Enter the root link : ")
+  fmt.Scanln(&rootLink)
+  BFS(c, rootLink)
 }
